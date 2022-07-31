@@ -1,4 +1,5 @@
 from copy import deepcopy
+from multiprocessing.sharedctypes import Value
 from typing import List, Tuple
 import random
 
@@ -52,7 +53,18 @@ class BennettW_Random(Playable):
         return min_util_value, min_move
 
     def _utility(self, game_state: List[List[int]], color: ChipColors) -> int:
-        return 5
+        return self._utility1(game_state, color)
+
+    def _utility1(self, game_state: List[List[int]], color: ChipColors) -> int:
+        open_cols = Game.open_columns(game_state)
+        for col in open_cols:
+            chip_row = Game.drop_chip(color, col, deepcopy(game_state))
+            if Game.is_last_move_win(chip_row, col, game_state):
+                return 10
+            chip_row = Game.drop_chip(ChipColors.get_opposite(color), col, deepcopy(game_state))
+            if Game.is_last_move_win(chip_row, col, game_state):
+                return -10
+        return 0
 
     def _gen_new_game_state(self, game_state: List[List[int]], row:int, col: int, color: ChipColors) -> List[List[int]]:
         new_game_state = deepcopy(game_state)

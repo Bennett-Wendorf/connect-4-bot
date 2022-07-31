@@ -18,16 +18,10 @@ def _play_game(red_player: Playable, black_player: Playable, starting_color: Chi
     player_next_turn = starting_color
 
     while game.win_state is None:
-        try:
-            if player_next_turn == ChipColors.RED:
-                game.insert_chip(player_next_turn, red_player.move(deepcopy(game.board_state), Game.open_columns(game.board_state), deepcopy(game.prev_moves)))
-            else:
-                game.insert_chip(player_next_turn, black_player.move(deepcopy(game.board_state), Game.open_columns(game.board_state), deepcopy(game.prev_moves)))
-        except ValueError as e:
-            if output_moves:
-                print("An invalid move was selected. Game forfeit.")
-            game.win_state = Game.WinStates.RED if player_next_turn == ChipColors.RED else Game.WinStates.BLACK
-            break
+        if player_next_turn == ChipColors.RED:
+            game.insert_chip(player_next_turn, red_player.move(deepcopy(game.board_state), Game.open_columns(game.board_state), deepcopy(game.prev_moves)))
+        else:
+            game.insert_chip(player_next_turn, black_player.move(deepcopy(game.board_state), Game.open_columns(game.board_state), deepcopy(game.prev_moves)))
 
         player_next_turn = ChipColors.BLACK if player_next_turn == ChipColors.RED else ChipColors.RED
         if output_moves:
@@ -77,7 +71,7 @@ if __name__ == '__main__':
         total_red_wins = 0
         total_black_wins = 0
         total_ties = 0
-        for i in range(100):
+        for i in range(10):
             game_result = _play_game(red_player, black_player, starting_color=ChipColors.get_random(), output_moves=True).win_state
             if game_result == Game.WinStates.RED:
                 total_red_wins += 1
