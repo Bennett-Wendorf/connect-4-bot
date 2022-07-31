@@ -77,8 +77,8 @@ if __name__ == '__main__':
         total_red_wins = 0
         total_black_wins = 0
         total_ties = 0
-        for i in range(1000):
-            game_result = _play_game(red_player, black_player, starting_color=ChipColors.get_random()).win_state
+        for i in range(100):
+            game_result = _play_game(red_player, black_player, starting_color=ChipColors.get_random(), output_moves=True).win_state
             if game_result == Game.WinStates.RED:
                 total_red_wins += 1
             elif game_result == Game.WinStates.BLACK:
